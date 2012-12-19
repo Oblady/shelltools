@@ -13,8 +13,6 @@
 #
 #################################################################
 
-source ./util.lib.sh
-
 #############################################################
 # Installation des couleurs dans bash						#	
 # todo : tester l'existance#  du fichier				    #
@@ -121,7 +119,8 @@ function install_logwatch()  {
     pause
     # ask for a true email to send logwatch
     EMAIL=$(whiptail --inputbox "Saisir l'email de l'administrateur?" --title "Logwatch admin email" 8 78 "${CURRENT}"  3>&1 1>&2 2>&3)
-	exitstatus=$?
+    exitstatus=$?
+    clear;
 	if [ $exitstatus = 0 -a -n "$EMAIL" ]
 	then
 	   #ssuppresion de l'email courant pour le remplacer par celui saisi	
@@ -137,8 +136,8 @@ function install_logwatch()  {
 # Installation  some security apps							#	
 #############################################################
 function install_security()  {
-	print_info "installing Security Packages"
-	disable_pause
+    print_info "installing Security Packages"
+    disable_pause
     install_nmap
     install_logwatch
     install_fail2ban
@@ -147,26 +146,3 @@ function install_security()  {
     enable_pause
 }
 
-######################################
-# Start Of Programme	     		 #	
-######################################
-
-check_sanity
-while : # Loop forever
-do
-clear
-reset_menu
-set_menu_title "Shell Tools"
-set_menu_query "Please select a tool"
-set_menu_quit "b" "Back" 
-add_menu "Install Cool bash colors" "install_cool_bash"
-add_menu "Install most" "install_most"
-add_menu "Install htop" "install_htop"
-add_menu "Install security packages" "install_security"
-show_menu
-
-case $result in
-b) exit ;;
-*) ${M_ACTIONS[result]};;
-esac
-done

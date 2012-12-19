@@ -29,13 +29,9 @@
 #   creation d'un user mysql
 #   creation d'une instance de dev
 #    - creation du vhost, du git, installation clef ssh jenkins,
-#  TODO xen Ganeti
-#  - install des modules manquant pour machine ganeti
-#  - configuration de tzdata
-#  - reconfiguration des locales 
 #####################################################################
 
-source ./util.lib.sh
+
 ######################################
 # NGINX installer 		     		 #	
 ######################################
@@ -317,34 +313,4 @@ function install_full_webmail {
 }
 
 
-######################################
-# Start Of Programme	     		 #	
-######################################
 
-check_sanity
-while : # Loop forever
-do
-clear
-reset_menu
-set_menu_title "Shell Tools"
-set_menu_query "Please select a tool"
-set_menu_quit "b" "Back" 
-add_menu "Install Nginx" "install_nginx"
-add_menu "Install apache" "install_apache"
-add_menu "Install PHP5" "install_php5"
-add_menu "Install Mysql" "install_mysql"
-add_menu "Install postfix" "install_postfix"
-add_menu "Install nullmailer" "install_nullmailer"
-add_menu "Install graphicsmagick" "install_graphicsmagick"
-add_menu "Install nginx fullhosting" "install_nginx_fullhosting"
-add_menu "Install nginx frontend" "install_nginx_frontend"
-add_menu "Install apache fullhosting" "install_nginx_fullhosting"
-add_menu "Install apache frontend" "install_nginx_frontend"
-add_menu "Install Munin Server" "install_munin_server"
-show_menu
-
-case $result in
-b) exit ;;
-*) ${M_ACTIONS[result]};;
-esac
-done
