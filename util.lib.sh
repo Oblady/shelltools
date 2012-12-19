@@ -4,16 +4,37 @@
 #################################################################
 # Version: 0.1
 # Date: 30/11/2012
-# Author:  Sébastient THIBAULT <sebastien@oblady.fr>
+# Author:  Sébastien THIBAULT <sebastien@oblady.fr>
 #
 # Notes: 
 #
 #
 #
 #####################################################################
-
-
-
+######################################
+# Define a few Color's				 #
+######################################
+BLACK='\e[0;30m'
+BLUE='\e[0;34m'
+GREEN='\e[0;32m'
+CYAN='\e[0;36m'
+RED='\e[0;31m'
+PURPLE='\e[0;35m'
+BROWN='\e[0;33m'
+LIGHTGRAY='\e[0;37m'
+DARKGRAY='\e[1;30m'
+LIGHTBLUE='\e[1;34m'
+LIGHTGREEN='\e[1;32m'
+LIGHTCYAN='\e[1;36m'
+LIGHTRED='\e[1;31m'
+LIGHTPURPLE='\e[1;35m'
+YELLOW='\e[1;33m'
+WHITE='\e[1;37m'
+NC='\e[0m'              # No Color
+######################################
+# Some Global Var			 #
+######################################
+export APP_PAUSABLE="on"
 ######################################
 # Utility Fonction		     		 #	
 ######################################
@@ -60,8 +81,36 @@ function scan_network {
 # Display a $message and wait for a key press		        #
 # usage : 	pause    					# 
 #################################################################
-function pause {
-   read -p 'Press [Enter] key to continue...'
+#function pause {
+#   read -p ''
+#}
+pause()
+{
+	echo "pause "$APP_PAUSABLE
+	if [ x$APP_PAUSABLE =  'xon' ] 
+	then 	
+      key=""
+      echo -n  "Press any key to continue..."
+      stty -icanon
+      key=`dd count=1 2>/dev/null`
+      stty icanon
+     fi
+}
+#################################################################
+# Disable the pause mechanisme							        #
+# usage : 	disable_pause    											# 
+#################################################################
+disable_pause()
+{
+	APP_PAUSABLE='off' 
+}
+#################################################################
+# enable the pause mechanisme							        #
+# usage : 	disable_pause    											# 
+#################################################################
+enable_pause()
+{
+	APP_PAUSABLE='on' 
 }
 #################################################################
 # Check if we are root on a debian distribution    		   	    #
@@ -133,15 +182,121 @@ function check_apt_source {
     return $result
 }
 #####################################################################
-# Check if $binary is present if not install $packages        	    #
-# usage : 	check_install $binary $package1 $package2 $packageN # 
+# Test Color :)										        	    #
+# usage : test_color												# 
+#####################################################################
+function test_color {
+
+   	printf "${BLACK}BLACK${NC}\n"
+ 	printf "${BLUE}BLUE${NC}\n"
+ 	printf "${GREEN}GREEN${NC}\n"
+ 	printf "${CYAN}CYAN${NC}\n"
+ 	printf "${PURPLE}PURPLE${NC}\n"
+ 	printf "${BROWN}BROWN${NC}\n"
+ 	printf "${LIGHTGRAY}LIGHTGRAY${NC}\n"
+ 	printf "${DARKGRAY}DARKGRAY${NC}\n"
+ 	printf "${LIGHTBLUE}LIGHTBLUE${NC}\n"
+ 	printf "${LIGHTGREEN}LIGHTGREEN${NC}\n"
+ 	printf "${LIGHTCYAN}LIGHTCYAN${NC}\n"
+ 	printf "${LIGHTRED}LIGHTRED${NC}\n"
+ 	printf "${LIGHTPURPLE}LIGHTPURPLE${NC}\n"
+ 	printf "${YELLOW}YELLOW${NC}\n"
+ 	printf "${WHITE}WHITE${NC}\n"
+    pause
+}
+
+#####################################################################
+# Test pause function :)										        	    #
+# usage : test_pause												# 
+#####################################################################
+function test_pause() {
+	
+	echo 'pausable state '$APP_PAUSABLE
+	pause
+	disable_pause
+	echo "app is not more pausable "
+	echo 'pausable state '$APP_PAUSABLE
+	pause
+	enable_pause
+	echo "app is pausable again "
+	echo 'pausable state '$APP_PAUSABLE
+	pause
+	
+}
+
+
+
+##########################################################################
+# add a new entry to a menu when you select $label $action will be run   #
+# usage : 	add_menu $label  $action     								 # 
+##########################################################################
+function add_menu()
+{ 
+  POS=$((($M_INDEX-1)*2))
+  M_CHOICES[POS]=$M_INDEX 	
+  M_CHOICES[POS+1]=$1
+  M_ACTIONS[M_INDEX]=$2
+  ((M_INDEX++))  	
+}
+#####################################################################
+# empty menu item and action						        	    #
+# usage : 	reset_menu											    # 
+#####################################################################
+function reset_menu(){
+	M_INDEX=1
+	unset M_CHOICES
+	unset M_ACTIONS	
+	unset M_TITLE
+	unset M_QUERY
+	unset M_QUIT_KEY
+	unset M_QUIT_LABEL
+	
+}
+#####################################################################
+# set the menu title								        	    #
+# usage : 	set_menu_title $title								    # 
+#####################################################################
+function set_menu_title(){
+	M_TITLE=$@
+}
+#####################################################################
+# set the menu query								        	    #
+# usage : 	set_menu_query $query								    # 
+#####################################################################
+function set_menu_query(){
+	M_QUERY=$@
+}
+#################################################################################################
+# set the menu entry for exit menu, when you select	$label , $key will be result        	    #
+# usage : 	set_menu_quit $key $label 											    		    # 
+#################################################################################################
+function set_menu_quit(){
+	M_QUIT_KEY=$1
+	M_QUIT_LABEL=$2
+}
+#################################################################################################
+# display the menu configured before												     	    #
+# usage : 	show_menu				 											    		    # 
+#################################################################################################
+function show_menu() {
+	LINES=$(tput lines)
+	COLUMNS=$(tput cols)	
+	M_HEIGHT=$(($LINES-20))
+	M_WIDTH=$(($COLUMNS-30))
+	S_HEIGHT=$(($M_HEIGHT-10))
+    result=$(whiptail --clear --nocancel --title "$M_TITLE" --menu "$M_QUERY"  $M_HEIGHT $M_WIDTH $S_HEIGHT "${M_CHOICES[@]}"	"$M_QUIT_KEY" "$M_QUIT_LABEL"  3>&2 2>&1 1>&3-)
+
+}
+
+#####################################################################
+# Create a database and a user, give access to the database to user #
+# usage : 	create_sql_db											# 
 #####################################################################
 
 function create_sql_db {
     MYSQL=`which mysql`
     clear
     printf "\e[01;32mEnter Database information to create\e[00m\n"
-    printf "\
     printf "\e[00;e[00;33mUsername : \e[00m"
     read DB_USER
     printf "\e[00;33mHost : \e[00m"
