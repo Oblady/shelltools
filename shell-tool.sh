@@ -55,6 +55,16 @@ function install_most()  {
     pause
 }
 #############################################################
+# Installation ntpdate                       		#	
+#############################################################
+function install_ntpdate()  {
+    print_info "installing ntpdate"
+    check_and_install ntpdate ntpdate
+    print_info "Configuring ntpdate"
+    echo "/usr/sbin/ntpdate -s 0.debian.pool.ntp.org" > /etc/cron.daily/ntpdate 
+    pause
+}
+#############################################################
 # Installation de nmap										#	
 #############################################################
 function install_nmap()  {

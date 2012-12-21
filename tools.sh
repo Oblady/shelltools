@@ -27,6 +27,7 @@ function install_minimal_tools()
    install_cool_bash
    install_htop
    install_most
+   install_ntpdate
    install_security
    enable_pause
 
