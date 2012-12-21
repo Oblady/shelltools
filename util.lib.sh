@@ -284,8 +284,8 @@ function show_menu() {
 	M_HEIGHT=$(($LINES-20))
 	M_WIDTH=$(($COLUMNS-30))
 	S_HEIGHT=$(($M_HEIGHT-10))
-    result=$(whiptail --clear --nocancel --title "$M_TITLE" --menu "$M_QUERY"  $M_HEIGHT $M_WIDTH $S_HEIGHT "${M_CHOICES[@]}"	"$M_QUIT_KEY" "$M_QUIT_LABEL"  3>&2 2>&1 1>&3-)
-
+        result=$(whiptail --clear --nocancel --title "$M_TITLE" --menu "$M_QUERY"  $M_HEIGHT $M_WIDTH $S_HEIGHT "${M_CHOICES[@]}"	"$M_QUIT_KEY" "$M_QUIT_LABEL"  3>&2 2>&1 1>&3-)
+        clear
 }
 
 #####################################################################

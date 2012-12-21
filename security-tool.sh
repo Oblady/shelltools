@@ -78,26 +78,3 @@ function run_logwatch(){
 
 }
 
-######################################
-# Start Of Programme	     		 #	
-######################################
-
-check_sanity
-while : # Loop forever
-do
-clear
-reset_menu
-set_menu_title "Security Tools"
-set_menu_query "What do you want to do"
-set_menu_quit "b" "Go Back" 
-add_menu "Show running progs" "list_progs"
-add_menu "Who is logged in" "who_is_logged"
-add_menu "Liste des ports ouverts" "run_nmap_local"
-add_menu "Analyser les logs" "run_logwatch"
-show_menu
-
-case $result in
-b) exit ;;
-*) ${M_ACTIONS[result]};;
-esac
-done
