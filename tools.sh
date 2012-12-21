@@ -10,27 +10,29 @@
 #
 #  A set of tools for debian admin :) 
 #
+#  TODO xen Ganeti
+#  - install des modules manquant pour machine ganeti
+#  - configuration de tzdata
+#  - reconfiguration des locales 
 #################################################################*
 source ./util.lib.sh
+source ./menu.lib.sh
+
+function install_minimal_tools() 
+{
+   source ./shell-tool.sh
+   source ./security-tool.sh
+   print_info "Installl a bunch of usefull package"
+   disable_pause
+   install_cool_bash
+   install_htop
+   install_most
+   install_ntpdate
+   install_security
+   enable_pause
+
+}
+
 check_sanity;
 
-
-while : # Loop forever
-do
-clear
-reset_menu
-set_menu_title "Main Menu"
-set_menu_query "Please select a tool"
-set_menu_quit "q" "Exit menu" 
-add_menu "Show shell tools menu" "./shell-tool.sh"
-add_menu "Show server tools menu" "./server-tool.sh"
-add_menu "Show security tools menu" "./security-tool.sh"
-add_menu "test pause" "test_pause"
-show_menu
-
-case $result in
-q) exit ;;
-*) ${M_ACTIONS[result]};;
-esac
-done
-
+main_menu;
