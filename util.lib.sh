@@ -173,8 +173,8 @@ function check {
     fi
 }
 #####################################################################
-# Check if $binary is present if not install $packages        	    #
-# usage : 	check_install $binary $package1 $package2 $packageN # 
+# Check if $depot is present in apt sources list     	    #
+# usage : 	check_apt_source $despot # 
 #####################################################################
 function check_apt_source {
 	depot=$1
