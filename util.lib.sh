@@ -84,9 +84,8 @@ function scan_network {
 #function pause {
 #   read -p ''
 #}
-pause()
+function pause()
 {
-	echo "pause "$APP_PAUSABLE
 	if [ x$APP_PAUSABLE =  'xon' ] 
 	then 	
       key=""
