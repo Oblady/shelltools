@@ -79,7 +79,26 @@ function install_nmap()  {
 function install_rkhunter()  {
 	print_info "installing rkhunter"
     check_and_install rkhunter rkhunter
-    pause
+    # on debian rkhunter complain about hidden dirs in /dev  
+	
+	if check_config  "ALLOWHIDDENDIR=/dev/.udev" "/etc/rkhunter.conf"
+	then
+	    #si KO ajout ligne
+		echo "ALLOWHIDDENDIR=/dev/.udev" >>	"/etc/rkhunter.conf";
+	fi
+	
+	if check_config  "ALLOWHIDDENDIR=/dev/.static" "/etc/rkhunter.conf"
+	then
+	    #si KO ajout ligne
+		echo "ALLOWHIDDENDIR=/dev/.static" >>	"/etc/rkhunter.conf";
+	fi
+	
+	if check_config  "ALLOWHIDDENDIR=/dev/.initramfs" "/etc/rkhunter.conf"
+	then
+	    #si KO ajout ligne
+		echo "ALLOWHIDDENDIR=/dev/.initramfs" >>	"/etc/rkhunter.conf";
+	fi
+	pause
 }
 
 #############################################################
