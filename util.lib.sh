@@ -181,6 +181,18 @@ function check_apt_source {
     return $result
 }
 #####################################################################
+# Check if $string is present in $config file    	    #
+# usage : 	check_config $string $file # 
+#####################################################################
+function check_config {
+	local config_string=$1
+	local config_file=$2
+	local result=$(cat "${config_file}"|egrep -v "^#"|grep "${config_string}"|wc -l 2> /dev/null)
+    return $result
+
+}
+
+#####################################################################
 # Test Color :)										        	    #
 # usage : test_color												# 
 #####################################################################
