@@ -72,7 +72,14 @@ function install_nmap()  {
     check_and_install nmap nmap
     pause
 }
-
+#############################################################
+# Installation de nmap										#	
+#############################################################
+function install_xsltproc()  {
+	print_info "installing xsltproc"
+    check_and_install xsltproc xsltproc
+    pause
+}
 #############################################################
 # Installation de rkhunter									#	
 #############################################################
@@ -98,6 +105,7 @@ function install_rkhunter()  {
 	    #si KO ajout ligne
 		echo "ALLOWHIDDENDIR=/dev/.initramfs" >>	"/etc/rkhunter.conf";
 	fi
+	
 	pause
 }
 
@@ -106,7 +114,7 @@ function install_rkhunter()  {
 #############################################################
 function install_fail2ban()  {
 	print_info "installing fail2ban"
-    check_and_install fail2ban fail2ban
+    check_and_install fail2ban-server fail2ban
     pause
 }
 #############################################################
@@ -172,6 +180,10 @@ function install_security()  {
     install_fail2ban
     install_rkhunter
     install_chkrootkit
+    # modifier la config de ssh pour améliorer la securité
+    # passer PermitRootLogin yes a PermitRootLogin without-password par defaut
+    # tester la config de sshd avec cette commande avant de la remplacer :) sshd -t -f /tmp/sshd_config 
+
     enable_pause
 }
 
