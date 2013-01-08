@@ -122,7 +122,7 @@ function install_php5 {
 ######################################
 function install_php5_mod {
 	print_info "installing PHP5 MOD"
-    check_and_install php5 libapache2-mod-php5 php5-cli php5-mysql php5-apc php5-curl
+    check_and_install php5 libapache2-mod-php5 php5-cli php5-gd php5-mysql php5-apc php5-curl
     pause
 }
 ######################################
@@ -156,7 +156,7 @@ function install_php5_fpm {
 		fi
 	    
 	    #install php5-fpm	 
-	    install_package php5-fpm php5-cli php5-mysql php5-apc php5-curl
+	    install_package php5-fpm php5-cli  php5-gd php5-mysql php5-apc php5-curl
 	else 
 		print_info	"php5-pfm already installed"
 	fi	
