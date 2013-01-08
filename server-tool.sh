@@ -342,7 +342,7 @@ function install_processmaker {
             rm /etc/php5/fpm/php.ini.save;
          fi
          mv /etc/php5/fpm/php.ini /etc/php5/fpm/php.ini.save
-         mv tmp/new_php.ini /etc/php5/fpm/php.ini
+         mv /tmp/new_php.ini /etc/php5/fpm/php.ini
       fi
     fi
 
