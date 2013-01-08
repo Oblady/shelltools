@@ -47,6 +47,7 @@ function server_menu() {
     add_menu "Install apache fullhosting" "install_nginx_fullhosting"
     add_menu "Install apache frontend" "install_nginx_frontend"
     add_menu "Install Munin Server" "install_munin_server"
+    add_menu "Install Processmaker" "install_processmaker"
     show_menu
 
     case $result in
