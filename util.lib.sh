@@ -328,7 +328,7 @@ function create_sql_db {
     MYSQL=`which mysql`
     clear
     printf "\e[01;32mEnter Database information to create\e[00m\n"
-    printf "\e[00;e[00;33mUsername : \e[00m"
+    printf "\e[00;33mUsername : \e[00m"
     read DB_USER
     printf "\e[00;33mHost : \e[00m"
     read DB_HOST
