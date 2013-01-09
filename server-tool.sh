@@ -122,7 +122,7 @@ function install_php5 {
 ######################################
 function install_php5_mod {
 	print_info "installing PHP5 MOD"
-    check_and_install php5 libapache2-mod-php5 php5-cli php5-mysql php5-apc php5-curl
+    check_and_install php5 libapache2-mod-php5 php5-cli php5-gd php5-mysql php5-apc php5-curl
     pause
 }
 ######################################
@@ -156,7 +156,7 @@ function install_php5_fpm {
 		fi
 	    
 	    #install php5-fpm	 
-	    install_package php5-fpm php5-cli php5-mysql php5-apc php5-curl
+	    install_package php5-fpm php5-cli  php5-gd php5-mysql php5-apc php5-curl
 	else 
 		print_info	"php5-pfm already installed"
 	fi	
@@ -312,5 +312,85 @@ function install_full_webmail {
     cd $CURRENT_DIR
 }
 
+
+######################################
+# Processmaker installer	    	 #	
+######################################
+function install_processmaker {
+    disable_pause
+    print_info "installing a webmail nginx+php5+mysql+processmaker "
+    apt-get -qq update
+    install_makepasswd
+    install_nginx
+    install_php5
+    install_mysql 
+    install_package php5-mcrypt 
+
+
+  if check_php_config short_open_tag /etc/php5/fpm/php.ini
+    then
+       echo "short_open_tag = on" >> /etc/php5/fpm/php.ini;
+    else
+      #la ligne est presente es ce la bonne 
+      if check_php_config "short_open_tag = on" /etc/php5/fpm/php.ini
+      then
+         ## pas la bonne il faut remplacer
+         cat /etc/php5/fpm/php.ini | grep -iv short_open_tag > /tmp/new_php.ini
+         echo "short_open_tag = on" >> /tmp/new_php.ini
+         if [ -f /etc/php5/fpm/php.ini.save ]
+         then
+            rm /etc/php5/fpm/php.ini.save;
+         fi
+         mv /etc/php5/fpm/php.ini /etc/php5/fpm/php.ini.save
+         mv /tmp/new_php.ini /etc/php5/fpm/php.ini
+      fi
+    fi
+
+    ROOT_SQL_PWD=$(makepasswd --char=12) 
+    PCM_SQL_PWD=$(makepasswd --char=8)  
+    #changement du mot de passe root sql qui est a vide par defaut
+    mysqladmin password "${ROOT_SQL_PWD}"
+    SQL="grant all on *.* to 'processmaker'@'localhost' identified by '${PCM_SQL_PWD}' with grant option;"
+    mysql -u root -p"${ROOT_SQL_PWD}" -e "$SQL" 
+    # ask for a vhost for acces processmaker
+    VHOST=$(whiptail --inputbox "server name de processmaker ?" --title "Processamker server name" 8 78 "processmaker.sample.net"  3>&1 1>&2 2>&3)
+    exitstatus=$?
+    clear;
+    if [ $exitstatus = 0 -a -n "${VHOST}" ]
+    then
+        sed -e "s/###VHOST###/${VHOST}/g" resources/processmaker/nginx_template.conf > /etc/nginx/conf.d/${VHOST}.conf
+         /etc/init.d/nginx restart
+    fi
+
+    sed -e "s/user = www-data/user = nginx/g" /etc/php5/fpm/pool.d/www.conf > /tmp/www.conf
+    sed -e "s/group = www-data/group = nginx/g" /tmp/www.conf > /etc/php5/fpm/pool.d/www.conf
+    rm  /tmp/www.conf
+    /etc/init.d/php5-fpm restart
+    CURRENT_DIR=$(pwd) 
+    cd /tmp
+    wget http://sourceforge.net/projects/processmaker/files/latest/download 
+    tar -zxvf download
+    rm download
+    mv /tmp/processmaker /opt
+    chmod 770 /opt/processmaker/shared
+    cd /opt/processmaker/workflow/engine/
+    chmod 770 config content/languages plugins xmlform js/labels
+    chown -R nginx:nginx /opt/processmaker
+    cd $CURRENT_DIR
+    clear
+    echo 'SQL root password is : "'${ROOT_SQL_PWD}'"';
+    echo 'Processmaker config :';
+    echo 'SQL server is : "localhost"';
+    echo 'SQL user is : "processmaker"';
+    echo 'SQL password  : "'${PCM_SQL_PWD}'"';
+    if [ -n "${VHOST}" ]
+    then
+      echo "follow wizzard on http://${VHOST}";
+    else 
+      echo 'you should configure nginx vhost for processmaker config sample in resources/processmaker/nginx_template.conf';
+    fi
+    enable_pause
+    pause
+}
 
 
