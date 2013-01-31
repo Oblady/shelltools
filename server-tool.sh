@@ -167,6 +167,7 @@ function install_php5_fpm {
 	    
 	    #install php5-fpm	 
 	    install_package php5-fpm php5-cli php5-mysql php5-apc php5-curl
+	    service php5-fpm restart
 	else 
 		print_info	"php5-pfm already installed"
 	fi	
