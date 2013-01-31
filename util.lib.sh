@@ -215,6 +215,16 @@ function test_color {
  	printf "${WHITE}WHITE${NC}\n"
     pause
 }
+#####################################################################
+# Trim string 									        	    #
+# usage : trim $string												# 
+#####################################################################
+trim() {
+    local var=$1
+    var="${var#"${var%%[![:space:]]*}"}"   # remove leading whitespace characters
+    var="${var%"${var##*[![:space:]]}"}"   # remove trailing whitespace characters
+    echo -n "$var"
+}
 
 #####################################################################
 # Test pause function :)										        	    #
