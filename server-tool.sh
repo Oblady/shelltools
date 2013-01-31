@@ -14,7 +14,7 @@
 #  - installer serveur sql uniquement (mysql + what )
 #  - installer pour phpmyadmin 
 #  - installer pour postfixadmin + roundcube ?
-#  - installer pour munin-node et config des plugins
+#  - installer pour munin-node et config des plugins (installer libwww-perl avec munin pour nginx/lighttpd/apache status)
 #  - installer pour monit
 #  - config de backuppc + dump_sql.sh
 #  - installer snmp et autre truc  (npre) pour centreon/nagios
@@ -66,6 +66,16 @@ function install_nginx {
 	fi	
     pause
 }
+
+######################################
+# apache installer	   	 #	
+######################################
+function install_apache {
+	print_info "installing Apache"
+    check_and_install apache2ctl apache2
+    pause
+}
+
 ######################################
 # Varnish installer		     	 #	
 ######################################
@@ -156,7 +166,9 @@ function install_php5_fpm {
 		fi
 	    
 	    #install php5-fpm	 
-	    install_package php5-fpm php5-cli  php5-gd php5-mysql php5-apc php5-curl
+	   install_package php5-fpm php5-cli  php5-gd php5-mysql php5-apc php5-curl
+	   service php5-fpm restart
+	
 	else 
 		print_info	"php5-pfm already installed"
 	fi	
@@ -311,6 +323,40 @@ function install_full_webmail {
     
     cd $CURRENT_DIR
 }
+######################################
+# Full Munin system installer	    	 #	
+######################################
+function install_munin_full {
+    print_info "installing a full munin server "
+    apt-get -qq update
+    disable_pause
+    install_munin_server
+    install_nginx
+    check_install spawn-fcgi spawn-fcgi
+    CURRENT_DIR=$(pwd) 
+    cd /tmp
+    #passsage de la generation des graphique en mode cgi
+    if check_config "graph_strategy cgi" "/etc/munin/munin.conf"
+	then
+     echo "graph_strategy cgi" >> /etc/munin/munin.conf
+     service munin restart
+
+    fi
+    # on install le script de demarrage de fastcgi pour les graphs
+    if [ ! -f /etc/init.d/munin-cgi-graph ]
+	then
+	  cp resources/munin-server/munin-cgi-graph /etc/init.d/
+	  chmod +x /etc/init.d/munin-cgi-graph 
+	  update-rc.d munin-cgi-graph defaults
+	  service munin-cgi-graph start
+    fi
+    #il faut ajouter la config qui va bien a nginx... this is the hard part
+    
+    cd $CURRENT_DIR
+    enable_pause
+    pause
+}
+
 
 
 ######################################
