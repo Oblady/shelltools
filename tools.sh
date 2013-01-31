@@ -25,6 +25,7 @@ function install_minimal_tools()
    print_info "Installl a bunch of usefull package"
    disable_pause
    install_cool_bash
+   install_makepasswd
    install_htop
    install_most
    install_ntpdate

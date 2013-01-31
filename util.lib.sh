@@ -191,6 +191,17 @@ function check_config {
     return $result
 
 }
+#####################################################################
+# Check if $string is present in $config file    	    #
+# usage : 	check_config $string $file # 
+#####################################################################
+function check_php_config {
+	local config_string=$1
+	local config_file=$2
+	local result=$(cat "${config_file}"|egrep -v "^;"|grep -i "${config_string}"|wc -l 2> /dev/null)
+    return $result
+
+}
 
 #####################################################################
 # Test Color :)										        	    #
@@ -308,6 +319,15 @@ function show_menu() {
         result=$(whiptail --clear --nocancel --title "$M_TITLE" --menu "$M_QUERY"  $M_HEIGHT $M_WIDTH $S_HEIGHT "${M_CHOICES[@]}"	"$M_QUIT_KEY" "$M_QUIT_LABEL"  3>&2 2>&1 1>&3-)
         clear
 }
+#################################################################################################
+# Install makepasswd password geneator											     	    #
+# usage :  install_makepasswd				 											    		    # 
+#################################################################################################
+function install_makepasswd() {
+
+  check_and_install makepasswd makepasswd
+}
+
 
 #####################################################################
 # Create a database and a user, give access to the database to user #
@@ -318,7 +338,7 @@ function create_sql_db {
     MYSQL=`which mysql`
     clear
     printf "\e[01;32mEnter Database information to create\e[00m\n"
-    printf "\e[00;e[00;33mUsername : \e[00m"
+    printf "\e[00;33mUsername : \e[00m"
     read DB_USER
     printf "\e[00;33mHost : \e[00m"
     read DB_HOST
