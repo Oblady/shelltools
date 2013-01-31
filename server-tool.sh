@@ -66,6 +66,16 @@ function install_nginx {
 	fi	
     pause
 }
+
+######################################
+# apache installer	   	 #	
+######################################
+function install_apache {
+	print_info "installing Apache"
+    check_and_install apache2ctl apache2
+    pause
+}
+
 ######################################
 # Varnish installer		     	 #	
 ######################################
