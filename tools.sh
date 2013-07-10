@@ -15,6 +15,7 @@
 #  - configuration de tzdata
 #  - reconfiguration des locales 
 #################################################################*
+unset TERMCAP
 source ./util.lib.sh
 source ./menu.lib.sh
 

@@ -35,6 +35,7 @@ function server_menu() {
     set_menu_title "Shell Tools"
     set_menu_query "Please select a tool"
     set_menu_quit "b" "Back" 
+    add_menu "Install Varnish" "install_varnish"
     add_menu "Install Nginx" "install_nginx"
     add_menu "Install apache" "install_apache"
     add_menu "Install PHP5" "install_php5"
