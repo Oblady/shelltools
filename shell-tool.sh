@@ -126,6 +126,16 @@ function install_chkrootkit()  {
     pause
 }
 
+#############################################################
+# Installation de denyhosts									#	
+#############################################################
+function install_denyhosts()  {
+	print_info "installing denyhosts"
+    check_and_install denyhosts denyhosts
+    pause
+}
+
+
 
 #############################################################
 # Installation de nmap										#	
@@ -177,7 +187,7 @@ function install_security()  {
     disable_pause
     install_nmap
     install_logwatch
-    install_fail2ban
+    install_denyhosts
     install_rkhunter
     install_chkrootkit
     # modifier la config de ssh pour améliorer la securité
