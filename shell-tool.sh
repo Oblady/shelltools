@@ -178,7 +178,15 @@ function install_logwatch()  {
 	fi
     pause
 }
+######################################
+# Screen Installer           #  
+######################################
+function install_smartmontools {
 
+    print_info "installing smartmontools"
+    check_and_install smartmontools smartmontools
+    pause
+}
 #############################################################
 # Installation  some security apps							#	
 #############################################################
@@ -190,6 +198,7 @@ function install_security()  {
     install_denyhosts
     install_rkhunter
     install_chkrootkit
+    install_smartmontools
     # modifier la config de ssh pour améliorer la securité
     # passer PermitRootLogin yes a PermitRootLogin without-password par defaut
     # tester la config de sshd avec cette commande avant de la remplacer :) sshd -t -f /tmp/sshd_config 
@@ -206,6 +215,9 @@ function install_screen {
     check_and_install screen screen
     pause
 }
+
+
+
 
 
 ######################################
