@@ -197,3 +197,23 @@ function install_security()  {
     enable_pause
 }
 
+######################################
+# Screen Installer           #  
+######################################
+function install_screen {
+
+    print_info "installing screen"
+    check_and_install screen screen
+    pause
+}
+
+
+######################################
+# Tmux Installer           #  
+######################################
+function install_tmux {
+
+    print_info "installing tmux"
+    check_and_install tmux tmux
+    pause
+}
